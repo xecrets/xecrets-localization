@@ -1,0 +1,35 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34728.123
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Xecrets.Localization", "Xecrets.Localization\Xecrets.Localization.csproj", "{E2418657-1389-41F9-9DBD-B400A07F4AE2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7B2C0B36-56F4-4A34-8E62-D44D800EDCDF}"
+	ProjectSection(SolutionItems) = preProject
+		..\.editorconfig = ..\.editorconfig
+		..\.gitignore = ..\.gitignore
+		global.json = global.json
+		..\LICENSE = ..\LICENSE
+		..\LICENSE.md = ..\LICENSE.md
+		..\README.md = ..\README.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E2418657-1389-41F9-9DBD-B400A07F4AE2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E2418657-1389-41F9-9DBD-B400A07F4AE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E2418657-1389-41F9-9DBD-B400A07F4AE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E2418657-1389-41F9-9DBD-B400A07F4AE2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {650D2BEC-FA7C-43AC-870F-1CF9B25E9A65}
+	EndGlobalSection
+EndGlobal

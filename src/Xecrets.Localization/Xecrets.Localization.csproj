@@ -1,0 +1,58 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Title>Xecrets RESX/PO Localization</Title>
+    <Authors>Axantum Software AB, Svante Seleborg</Authors>
+    <Company>Axantum Software AB</Company>
+    <Description>Provide translations from embedded .po files using definitions and fallbacks from .resx resources.</Description>
+    <Copyright>Copyright © 2022-2024, Svante Seleborg, All Rights Reserved</Copyright>
+    <PackageProjectUrl>https://www.axantum.com/</PackageProjectUrl>
+    <PackageIcon>Resources\icon_128x128.png</PackageIcon>
+    <PackageTags>axantum;xecrets;localization;gettext</PackageTags>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <RepositoryUrl>https://github.com/xecrets/xecrets-localization</RepositoryUrl>
+    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+    <WarningLevel>9999</WarningLevel>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+    <WarningLevel>9999</WarningLevel>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\LICENSE.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Karambolo.PO.Minimal" Version="1.11.1" />
+    <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="8.0.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Resources\icon_128x128.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>
