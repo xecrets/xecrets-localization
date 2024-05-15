@@ -65,6 +65,5 @@ You can still use refactoring tools etc to find references to a string in the co
 
 Note - pluralization is not supported in this version. It may be supported in a future version.
 Currently we roll our own, using a convention to have the singular and plural forms in the same
-string, with a separator, and then split the string in the code, for example ``"No files|One
-file|{0} files"``." This does not handle all possible cases, but it is sufficient for our needs at
-this time.
+string, with a separator, and then split the string in the code, for example `"No files|One file|{0}
+files"`." This does not handle all possible cases, but it is sufficient for our needs at this time.
