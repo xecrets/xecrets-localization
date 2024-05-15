@@ -12,13 +12,13 @@
     <Description>Provide translations from embedded .po files using definitions and fallbacks from .resx resources.</Description>
     <Copyright>Copyright © 2024, Svante Seleborg, All Rights Reserved</Copyright>
     <PackageProjectUrl>https://www.axantum.com/</PackageProjectUrl>
-    <PackageIcon>icon_128x128.png</PackageIcon>
     <PackageTags>axantum;xecrets;localization;gettext</PackageTags>
     <NeutralLanguage>en-US</NeutralLanguage>
     <RepositoryUrl>https://github.com/xecrets/xecrets-localization</RepositoryUrl>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <Version>1.0.0</Version>
+    <PackageIcon>icon_128x128.png</PackageIcon>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -50,7 +50,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Resources\icon_128x128.png">
+    <None Include="Resources\icon_128x128.png">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
