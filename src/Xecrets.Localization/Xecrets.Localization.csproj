@@ -19,6 +19,8 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <Version>1.0.0</Version>
     <PackageIcon>icon_128x128.png</PackageIcon>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
