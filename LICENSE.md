@@ -1,4 +1,8 @@
-﻿Copyright 2024, Svante Seleborg
+﻿MIT License
+===========
+
+Copyright © 2024, Svante Seleborg
+---------------------------------
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 associated documentation files (the “Software”), to deal in the Software without restriction,
