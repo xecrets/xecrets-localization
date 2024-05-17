@@ -89,6 +89,12 @@ namespace Xecrets.Localization
         /// <returns>true if a translation was found.</returns>
         public bool TryGetTranslation(string name, out string searchedLocation, out string value)
         {
+            bool wasFound = TryInternal(location, name, out searchedLocation, out value);
+            return wasFound;
+        }
+
+        private bool TryInternal(string location, string name, out string searchedLocation, out string value)
+        {
             searchedLocation = location;
 
             POCatalog? catalog = GetCatalog();
@@ -98,7 +104,7 @@ namespace Xecrets.Localization
                 return false;
             }
 
-            POKey key = new(name);
+            POKey key = new(name.Replace(Environment.NewLine, "\n"));
             value = catalog.GetTranslation(key);
             if (value == null)
             {
