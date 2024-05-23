@@ -90,6 +90,7 @@ namespace Xecrets.Localization
         public bool TryGetTranslation(string name, out string searchedLocation, out string value)
         {
             bool wasFound = TryInternal(location, name, out searchedLocation, out value);
+            value = value.Replace(@"\n", Environment.NewLine);
             return wasFound;
         }
 
@@ -104,7 +105,7 @@ namespace Xecrets.Localization
                 return false;
             }
 
-            POKey key = new(name.Replace(Environment.NewLine, "\n"));
+            POKey key = new(name.Replace("\r\n", "\n"));
             value = catalog.GetTranslation(key);
             if (value == null)
             {
