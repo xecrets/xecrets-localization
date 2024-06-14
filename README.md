@@ -11,13 +11,14 @@ to create .po files for each language.
 
 Using the POTools from https://github.com/adams85/aspnetskeleton2/tree/master/tools/POTools the
 first step is to extract strings from .resx files to .pot files. The second step is to create .po
-files for each language. The third step is to embed the .po files in the assembly.
+files for each language. The third step is to embed the .po files as resources in the assembly.
 
 The .po files should be located in a separate directory for each culture, named after the culture
-for example "en-US" or "sv-SE". Include the files in the project and set the "Build Action" to
-"Embedded Resource". This will cause the resource to be named based on the path and the names, with
-path separators replaced by ".", and dashes replaced by underscores. This is expected and required
-by the `Xecrets.Localization` package.
+for example "en-US" or "sv-SE", or with an underscore instead of a dash. Include the files in the
+project and set the "Build Action" to "Embedded Resource". This will cause the resource to be named
+based on the path and the names, with path separators replaced by ".", and dashes replaced by
+underscores. Further subfolders are possible between the culture folder and the .po file, they will
+just be ignored. This is expected and required by the `Xecrets.Localization` package.
 
 Once the .po files are embedded in the assembly, the `Xecrets.Localization` package can be used to
 provide translations for the strings in the .resx files.

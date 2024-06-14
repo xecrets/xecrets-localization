@@ -35,6 +35,7 @@
 using Karambolo.PO;
 
 using System.Reflection;
+using System.Resources;
 
 namespace Xecrets.Localization
 {
@@ -60,8 +61,9 @@ namespace Xecrets.Localization
         /// <param name="resourceAssembly">The assembly to get embedded resource files from.</param>
         /// <remarks>
         /// The resource files must be located in a folder with subfolders for each culture, according to the pattern:
-        /// .../[foldername]/[language-country]/[arbitraryname].po, resulting in a resource name like
-        /// .../[foldername].[language_country].[arbitraryname].po, for example "Translations.en_US.MyTranslations.po".
+        /// .../[foldername]/[language-country]/.../[arbitraryname].po, resulting in a resource name like
+        /// .../[foldername].[language_country]/.../.[arbitraryname].po, for example "Translations.en_US.MyTranslations.po",
+        /// or "Translations.sv_SE.LC_MESSAGES.MyTranslations.po".
         /// </remarks>
         public POTranslationsProvider(Assembly resourceAssembly)
         {
@@ -82,8 +84,9 @@ namespace Xecrets.Localization
 
         private (POCatalog Catalog, string Culture)? LoadFile(string resource)
         {
-            string[] parts = resource.Split('.');
-            string culture = parts[parts.Length - 3].Replace('_', '-');
+            string resourceMinusAssemblyName = resource.Substring(_resourceAssembly.GetName().Name!.Length + 1);
+            string[] parts = resourceMinusAssemblyName.Split('.');
+            string culture = parts[1].Replace('_', '-');
 
             POCatalog? catalog = LoadTranslations(resource);
             return catalog == null ? null : (catalog, culture);
