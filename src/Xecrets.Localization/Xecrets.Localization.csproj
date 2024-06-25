@@ -48,7 +48,7 @@
 
   <ItemGroup>
     <PackageReference Include="Karambolo.PO.Minimal" Version="1.11.1" />
-    <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="8.0.5" />
+    <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="8.0.6" />
   </ItemGroup>
 
   <ItemGroup>
