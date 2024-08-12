@@ -28,6 +28,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyProduct("Xecrets Localization")]
 [assembly: AssemblyCopyright("Copyright © 2022-2024 Svante Seleborg, All Rights Reserved")]
 [assembly: AssemblyTrademark("Xecrets is a trademark of Axantum Software AB")]
+[assembly: AssemblyMetadata("RepositoryUrl", "https://github.com/xecrets/xecrets-localization")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
