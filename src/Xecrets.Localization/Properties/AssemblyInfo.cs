@@ -17,7 +17,7 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Xecrets Localization BETA GPL")]
+[assembly: AssemblyTitle("Xecrets Localization BETA GPL main assembly")]
 [assembly: AssemblyDescription("Provide translations from embedded .po files using definitions and fallbacks from .resx resources")]
 #if DEBUG
 [assembly: AssemblyConfiguration("Debug")]
