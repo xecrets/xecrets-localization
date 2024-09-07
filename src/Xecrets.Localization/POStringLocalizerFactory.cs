@@ -1,4 +1,4 @@
-﻿#region Coypright and License
+﻿#region Copyright and License
 
 /*
  * Xecrets Ez - Copyright © 2022-2024, Svante Seleborg, All Rights Reserved.
@@ -30,7 +30,7 @@
  * https://github.com/adams85/po which is licensed under the MIT License.
 */
 
-#endregion Coypright and License
+#endregion Copyright and License
 
 using Microsoft.Extensions.Localization;
 

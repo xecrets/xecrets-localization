@@ -1,4 +1,4 @@
-﻿#region Coypright and License
+﻿#region Copyright and License
 
 /*
  * Xecrets Licensing - Copyright © 2022-2024, Svante Seleborg, All Rights Reserved.
@@ -9,7 +9,7 @@
  * and may not be copied, distributed, sold, modified or otherwise used in any way.
 */
 
-#endregion Coypright and License
+#endregion Copyright and License
 
 using System.Reflection;
 using System.Runtime.InteropServices;
