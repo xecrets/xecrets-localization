@@ -98,7 +98,8 @@ namespace Xecrets.Localization
         {
             searchedLocation = location;
 
-            POCatalog? catalog = GetCatalog();
+            IReadOnlyDictionary<string, POCatalog> catalogs = translationsProvider.GetCatalogs();
+            POCatalog? catalog = GetCatalog(catalogs);
             if (catalog == null)
             {
                 value = name;
@@ -106,19 +107,19 @@ namespace Xecrets.Localization
             }
 
             POKey key = new(name.Replace("\r\n", "\n"));
-            value = catalog.GetTranslation(key);
-            if (value == null)
+            string? translation = catalog.GetTranslation(key);
+            if (translation == null)
             {
-                value = name;
-                return false;
+                catalogs.TryGetValue("en-US", out POCatalog? englishCatalog);
+                translation = englishCatalog?.GetTranslation(key) ?? key.Id;
             }
 
-            return true;
+            value = translation;
+            return value != key.Id;
         }
 
-        private POCatalog? GetCatalog()
+        private POCatalog? GetCatalog(IReadOnlyDictionary<string, POCatalog> catalogs)
         {
-            IReadOnlyDictionary<string, POCatalog> catalogs = translationsProvider.GetCatalogs();
             CultureInfo culture = _culture;
             while (true)
             {
@@ -130,7 +131,8 @@ namespace Xecrets.Localization
                 CultureInfo parentCulture = culture.Parent;
                 if (culture == parentCulture)
                 {
-                    return null;
+                    catalogs.TryGetValue("en-US", out POCatalog? englishCatalog);
+                    return englishCatalog;
                 }
 
                 culture = parentCulture;
