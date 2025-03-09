@@ -10,7 +10,7 @@
     <Authors>Axantum Software AB, Svante Seleborg</Authors>
     <Company>Axantum Software AB</Company>
     <Description>Provide translations from embedded .po files using definitions and fallbacks from .resx resources.</Description>
-    <Copyright>Copyright © 2024, Svante Seleborg, All Rights Reserved</Copyright>
+    <Copyright>Copyright © 2022-2025 Svante Seleborg, All Rights Reserved</Copyright>
     <PackageProjectUrl>https://www.axantum.com/</PackageProjectUrl>
     <PackageTags>axantum;xecrets;localization;gettext</PackageTags>
     <NeutralLanguage>en-US</NeutralLanguage>

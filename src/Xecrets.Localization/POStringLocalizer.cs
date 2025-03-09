@@ -1,7 +1,7 @@
 ﻿#region Copyright and License
 
 /*
- * Xecrets Ez - Copyright © 2022-2024, Svante Seleborg, All Rights Reserved.
+ * Xecrets Ez - Copyright © 2022-2025 Svante Seleborg, All Rights Reserved.
  *
  * This code file is part of Xecrets Ez - A cross platform desktop application
  * for encryption, decryption and other file operations based on Xecrets Cli.
@@ -38,138 +38,137 @@ using Microsoft.Extensions.Localization;
 
 using System.Globalization;
 
-namespace Xecrets.Localization
+namespace Xecrets.Localization;
+
+/// <summary>
+/// Localizes strings using a <see cref="ITranslationsProvider"/>.
+/// </summary>
+/// <param name="translationsProvider"></param>
+/// <param name="location"></param>
+/// <param name="culture"></param>
+public sealed class POStringLocalizer(ITranslationsProvider translationsProvider, string location, CultureInfo? culture = null) : IStringLocalizer
 {
+    private readonly CultureInfo _culture = culture ?? CultureInfo.CurrentUICulture;
+
     /// <summary>
-    /// Localizes strings using a <see cref="ITranslationsProvider"/>.
+    /// Translates a string by name, falling back to the name if no translation is found.
     /// </summary>
-    /// <param name="translationsProvider"></param>
-    /// <param name="location"></param>
-    /// <param name="culture"></param>
-    public sealed class POStringLocalizer(ITranslationsProvider translationsProvider, string location, CultureInfo? culture = null) : IStringLocalizer
+    /// <param name="name">The string to translate, typically the english original.</param>
+    /// <returns>A translated string.</returns>
+    public LocalizedString this[string name]
     {
-        private readonly CultureInfo _culture = culture ?? CultureInfo.CurrentUICulture;
-
-        /// <summary>
-        /// Translates a string by name, falling back to the name if no translation is found.
-        /// </summary>
-        /// <param name="name">The string to translate, typically the english original.</param>
-        /// <returns>A translated string.</returns>
-        public LocalizedString this[string name]
+        get
         {
-            get
-            {
-                bool resourceNotFound = !TryGetTranslation(name, out var searchedLocation, out var value);
-                return new LocalizedString(name, value!, resourceNotFound, searchedLocation);
-            }
+            bool resourceNotFound = !TryGetTranslation(name, out var searchedLocation, out var value);
+            return new LocalizedString(name, value!, resourceNotFound, searchedLocation);
+        }
+    }
+
+    /// <summary>
+    /// Translates a string by name, falling back to the name if no translation is found.
+    /// Also formats the string with the provided arguments.
+    /// </summary>
+    /// <param name="name">The string to translate, typically the english original.</param>
+    /// <param name="arguments">Arguments passed to string.Format()</param>
+    /// <returns>A translated string.</returns>
+    public LocalizedString this[string name, params object[] arguments]
+    {
+        get
+        {
+            bool resourceNotFound = !TryGetTranslation(name, out string searchedLocation, out string value);
+            return new LocalizedString(name, string.Format(value!, arguments), resourceNotFound, searchedLocation);
+        }
+    }
+
+    /// <summary>
+    /// Try to get a translation for a given name.
+    /// </summary>
+    /// <param name="name">The name of the string to get.</param>
+    /// <param name="searchedLocation">Where we're looking for the translation.</param>
+    /// <param name="value">The translated value, or falls back to name.</param>
+    /// <returns>true if a translation was found.</returns>
+    public bool TryGetTranslation(string name, out string searchedLocation, out string value)
+    {
+        bool wasFound = TryInternal(location, name, out searchedLocation, out value);
+        value = value.Replace(@"\n", Environment.NewLine);
+        return wasFound;
+    }
+
+    private bool TryInternal(string location, string name, out string searchedLocation, out string value)
+    {
+        searchedLocation = location;
+
+        IReadOnlyDictionary<string, POCatalog> catalogs = translationsProvider.GetCatalogs();
+        POCatalog? catalog = GetCatalog(catalogs);
+        if (catalog == null)
+        {
+            value = name;
+            return false;
         }
 
-        /// <summary>
-        /// Translates a string by name, falling back to the name if no translation is found.
-        /// Also formats the string with the provided arguments.
-        /// </summary>
-        /// <param name="name">The string to translate, typically the english original.</param>
-        /// <param name="arguments">Arguments passed to string.Format()</param>
-        /// <returns>A translated string.</returns>
-        public LocalizedString this[string name, params object[] arguments]
+        POKey key = new(name.Replace("\r\n", "\n"));
+        string? translation = catalog.GetTranslation(key);
+        if (translation == null)
         {
-            get
-            {
-                bool resourceNotFound = !TryGetTranslation(name, out string searchedLocation, out string value);
-                return new LocalizedString(name, string.Format(value!, arguments), resourceNotFound, searchedLocation);
-            }
+            catalogs.TryGetValue("en-US", out POCatalog? englishCatalog);
+            translation = englishCatalog?.GetTranslation(key) ?? key.Id;
         }
 
-        /// <summary>
-        /// Try to get a translation for a given name.
-        /// </summary>
-        /// <param name="name">The name of the string to get.</param>
-        /// <param name="searchedLocation">Where we're looking for the translation.</param>
-        /// <param name="value">The translated value, or falls back to name.</param>
-        /// <returns>true if a translation was found.</returns>
-        public bool TryGetTranslation(string name, out string searchedLocation, out string value)
-        {
-            bool wasFound = TryInternal(location, name, out searchedLocation, out value);
-            value = value.Replace(@"\n", Environment.NewLine);
-            return wasFound;
-        }
+        value = translation;
+        return value != key.Id;
+    }
 
-        private bool TryInternal(string location, string name, out string searchedLocation, out string value)
+    private POCatalog? GetCatalog(IReadOnlyDictionary<string, POCatalog> catalogs)
+    {
+        CultureInfo culture = _culture;
+        while (true)
         {
-            searchedLocation = location;
-
-            IReadOnlyDictionary<string, POCatalog> catalogs = translationsProvider.GetCatalogs();
-            POCatalog? catalog = GetCatalog(catalogs);
-            if (catalog == null)
+            if (catalogs.TryGetValue(culture.Name, out POCatalog? catalog))
             {
-                value = name;
-                return false;
+                return catalog;
             }
 
-            POKey key = new(name.Replace("\r\n", "\n"));
-            string? translation = catalog.GetTranslation(key);
-            if (translation == null)
+            CultureInfo parentCulture = culture.Parent;
+            if (culture == parentCulture)
             {
                 catalogs.TryGetValue("en-US", out POCatalog? englishCatalog);
-                translation = englishCatalog?.GetTranslation(key) ?? key.Id;
+                return englishCatalog;
             }
 
-            value = translation;
-            return value != key.Id;
+            culture = parentCulture;
         }
+    }
 
-        private POCatalog? GetCatalog(IReadOnlyDictionary<string, POCatalog> catalogs)
+    /// <summary>
+    /// Get all strings for the current culture.
+    /// </summary>
+    /// <param name="includeParentCultures"></param>
+    /// <returns></returns>
+    public IEnumerable<LocalizedString> GetAllStrings(bool includeParentCultures)
+    {
+        IReadOnlyDictionary<string, POCatalog> catalogs = translationsProvider.GetCatalogs();
+        CultureInfo culture = _culture;
+        do
         {
-            CultureInfo culture = _culture;
-            while (true)
+            if (catalogs.TryGetValue(culture.Name, out var catalog))
             {
-                if (catalogs.TryGetValue(culture.Name, out POCatalog? catalog))
+                foreach (IPOEntry? entry in catalog)
                 {
-                    return catalog;
-                }
-
-                CultureInfo parentCulture = culture.Parent;
-                if (culture == parentCulture)
-                {
-                    catalogs.TryGetValue("en-US", out POCatalog? englishCatalog);
-                    return englishCatalog;
-                }
-
-                culture = parentCulture;
-            }
-        }
-
-        /// <summary>
-        /// Get all strings for the current culture.
-        /// </summary>
-        /// <param name="includeParentCultures"></param>
-        /// <returns></returns>
-        public IEnumerable<LocalizedString> GetAllStrings(bool includeParentCultures)
-        {
-            IReadOnlyDictionary<string, POCatalog> catalogs = translationsProvider.GetCatalogs();
-            CultureInfo culture = _culture;
-            do
-            {
-                if (catalogs.TryGetValue(culture.Name, out var catalog))
-                {
-                    foreach (IPOEntry? entry in catalog)
+                    if (entry.Count > 0)
                     {
-                        if (entry.Count > 0)
-                        {
-                            yield return new LocalizedString(entry.Key.Id, entry[0], resourceNotFound: false, location);
-                        }
+                        yield return new LocalizedString(entry.Key.Id, entry[0], resourceNotFound: false, location);
                     }
                 }
-
-                CultureInfo parentCulture = culture.Parent;
-                if (culture == parentCulture)
-                {
-                    break;
-                }
-
-                culture = parentCulture;
             }
-            while (includeParentCultures);
+
+            CultureInfo parentCulture = culture.Parent;
+            if (culture == parentCulture)
+            {
+                break;
+            }
+
+            culture = parentCulture;
         }
+        while (includeParentCultures);
     }
 }

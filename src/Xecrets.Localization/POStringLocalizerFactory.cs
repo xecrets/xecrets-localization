@@ -1,7 +1,7 @@
 ﻿#region Copyright and License
 
 /*
- * Xecrets Ez - Copyright © 2022-2024, Svante Seleborg, All Rights Reserved.
+ * Xecrets Ez - Copyright © 2022-2025 Svante Seleborg, All Rights Reserved.
  *
  * This code file is part of Xecrets Ez - A cross platform desktop application
  * for encryption, decryption and other file operations based on Xecrets Cli.
@@ -34,31 +34,30 @@
 
 using Microsoft.Extensions.Localization;
 
-namespace Xecrets.Localization
+namespace Xecrets.Localization;
+
+/// <summary>
+/// Factory for creating <see cref="POStringLocalizer"/> instances.
+/// </summary>
+/// <param name="translationsProvider">An implementation of <see cref="ITranslationsProvider"/></param>
+public sealed class POStringLocalizerFactory(ITranslationsProvider translationsProvider) : IStringLocalizerFactory
 {
     /// <summary>
-    /// Factory for creating <see cref="POStringLocalizer"/> instances.
+    /// Creates an instance of <see cref="POStringLocalizer"/>.
     /// </summary>
-    /// <param name="translationsProvider">An implementation of <see cref="ITranslationsProvider"/></param>
-    public sealed class POStringLocalizerFactory(ITranslationsProvider translationsProvider) : IStringLocalizerFactory
-    {
-        /// <summary>
-        /// Creates an instance of <see cref="POStringLocalizer"/>.
-        /// </summary>
-        /// <param name="baseName"></param>
-        /// <param name="location"></param>
-        /// <returns></returns>
-        public IStringLocalizer Create(string baseName, string location) => new POStringLocalizer(translationsProvider, location);
+    /// <param name="baseName"></param>
+    /// <param name="location"></param>
+    /// <returns></returns>
+    public IStringLocalizer Create(string baseName, string location) => new POStringLocalizer(translationsProvider, location);
 
-        /// <summary>
-        /// Creates an instance of <see cref="POStringLocalizer"/>. Not implemented.
-        /// </summary>
-        /// <param name="resourceSource"></param>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public IStringLocalizer Create(Type resourceSource)
-        {
-            throw new NotImplementedException();
-        }
+    /// <summary>
+    /// Creates an instance of <see cref="POStringLocalizer"/>. Not implemented.
+    /// </summary>
+    /// <param name="resourceSource"></param>
+    /// <returns></returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public IStringLocalizer Create(Type resourceSource)
+    {
+        throw new NotImplementedException();
     }
 }

@@ -1,7 +1,7 @@
 ﻿#region Copyright and License
 
 /*
- * Xecrets Ez - Copyright © 2022-2024, Svante Seleborg, All Rights Reserved.
+ * Xecrets Ez - Copyright © 2022-2025 Svante Seleborg, All Rights Reserved.
  *
  * This code file is part of Xecrets Ez - A cross platform desktop application
  * for encryption, decryption and other file operations based on Xecrets Cli.
@@ -32,86 +32,84 @@
 
 #endregion Copyright and License
 
+using System.Reflection;
+
 using Karambolo.PO;
 
-using System.Reflection;
-using System.Resources;
+namespace Xecrets.Localization;
 
-namespace Xecrets.Localization
+/// <summary>
+/// Implementation of <see cref="ITranslationsProvider"/> that loads translations from embedded .po files.
+/// </summary>
+public class POTranslationsProvider : ITranslationsProvider
 {
-    /// <summary>
-    /// Implementation of <see cref="ITranslationsProvider"/> that loads translations from embedded .po files.
-    /// </summary>
-    public class POTranslationsProvider : ITranslationsProvider
+    private static readonly POParserSettings _parserSettings = new POParserSettings
     {
-        private static readonly POParserSettings _parserSettings = new POParserSettings
-        {
-            SkipComments = true,
-            SkipInfoHeaders = true,
-            StringDecodingOptions = new POStringDecodingOptions { KeepKeyStringsPlatformIndependent = true }
-        };
+        SkipComments = true,
+        SkipInfoHeaders = true,
+        StringDecodingOptions = new POStringDecodingOptions { KeepKeyStringsPlatformIndependent = true }
+    };
 
-        private readonly Assembly _resourceAssembly;
+    private readonly Assembly _resourceAssembly;
 
-        private readonly IReadOnlyDictionary<string, POCatalog> _catalogs;
+    private readonly IReadOnlyDictionary<string, POCatalog> _catalogs;
 
-        /// <summary>
-        /// Instantiates a new instance of <see cref="POTranslationsProvider"/>.
-        /// </summary>
-        /// <param name="resourceAssembly">The assembly to get embedded resource files from.</param>
-        /// <remarks>
-        /// The resource files must be located in a folder with subfolders for each culture, according to the pattern:
-        /// .../[foldername]/[language-country]/.../[arbitraryname].po, resulting in a resource name like
-        /// .../[foldername].[language_country]/.../.[arbitraryname].po, for example "Translations.en_US.MyTranslations.po",
-        /// or "Translations.sv_SE.LC_MESSAGES.MyTranslations.po".
-        /// </remarks>
-        public POTranslationsProvider(Assembly resourceAssembly)
-        {
-            _resourceAssembly = resourceAssembly;
-            _catalogs = LoadFromResources();
-        }
-
-        private Dictionary<string, POCatalog> LoadFromResources()
-        {
-            string[] resources = _resourceAssembly.GetManifestResourceNames();
-
-            return resources
-                .Where(r => r.EndsWith(".po"))
-                .Select(LoadFile)
-                .Where(item => item != null)
-                .ToDictionary(item => item!.Value.Culture, item => item!.Value.Catalog);
-        }
-
-        private (POCatalog Catalog, string Culture)? LoadFile(string resource)
-        {
-            string resourceMinusAssemblyName = resource.Substring(_resourceAssembly.GetName().Name!.Length + 1);
-            string[] parts = resourceMinusAssemblyName.Split('.');
-            string culture = parts[1].Replace('_', '-');
-
-            POCatalog? catalog = LoadTranslations(resource);
-            return catalog == null ? null : (catalog, culture);
-        }
-
-        private POCatalog? LoadTranslations(string resourcePath)
-        {
-            using Stream stream = _resourceAssembly.GetManifestResourceStream(resourcePath)!;
-
-            POParseResult parseResult = new POParser(_parserSettings).Parse(stream);
-            if (!parseResult.Success)
-            {
-                IEnumerable<Diagnostic> diagnosticMessages = parseResult.Diagnostics
-                    .Where(diagnostic => diagnostic.Severity == DiagnosticSeverity.Error);
-
-                throw new InvalidOperationException($"Translation file '{resourcePath}' has errors: {string.Join(Environment.NewLine, diagnosticMessages)}");
-            }
-
-            return parseResult.Catalog;
-        }
-
-        /// <summary>
-        /// Get a cached dictionary of catalogs.
-        /// </summary>
-        /// <returns>A read only dictionary.</returns>
-        public IReadOnlyDictionary<string, POCatalog> GetCatalogs() => _catalogs;
+    /// <summary>
+    /// Instantiates a new instance of <see cref="POTranslationsProvider"/>.
+    /// </summary>
+    /// <param name="resourceAssembly">The assembly to get embedded resource files from.</param>
+    /// <remarks>
+    /// The resource files must be located in a folder with subfolders for each culture, according to the pattern:
+    /// .../[foldername]/[language-country]/.../[arbitraryname].po, resulting in a resource name like
+    /// .../[foldername].[language_country]/.../.[arbitraryname].po, for example "Translations.en_US.MyTranslations.po",
+    /// or "Translations.sv_SE.LC_MESSAGES.MyTranslations.po".
+    /// </remarks>
+    public POTranslationsProvider(Assembly resourceAssembly)
+    {
+        _resourceAssembly = resourceAssembly;
+        _catalogs = LoadFromResources();
     }
+
+    private Dictionary<string, POCatalog> LoadFromResources()
+    {
+        string[] resources = _resourceAssembly.GetManifestResourceNames();
+
+        return resources
+            .Where(r => r.EndsWith(".po"))
+            .Select(LoadFile)
+            .Where(item => item != null)
+            .ToDictionary(item => item!.Value.Culture, item => item!.Value.Catalog);
+    }
+
+    private (POCatalog Catalog, string Culture)? LoadFile(string resource)
+    {
+        string resourceMinusAssemblyName = resource.Substring(_resourceAssembly.GetName().Name!.Length + 1);
+        string[] parts = resourceMinusAssemblyName.Split('.');
+        string culture = parts[1].Replace('_', '-');
+
+        POCatalog? catalog = LoadTranslations(resource);
+        return catalog == null ? null : (catalog, culture);
+    }
+
+    private POCatalog? LoadTranslations(string resourcePath)
+    {
+        using Stream stream = _resourceAssembly.GetManifestResourceStream(resourcePath)!;
+
+        POParseResult parseResult = new POParser(_parserSettings).Parse(stream);
+        if (!parseResult.Success)
+        {
+            IEnumerable<Diagnostic> diagnosticMessages = parseResult.Diagnostics
+                .Where(diagnostic => diagnostic.Severity == DiagnosticSeverity.Error);
+
+            throw new InvalidOperationException($"Translation file '{resourcePath}' has errors: {string.Join(Environment.NewLine, diagnosticMessages)}");
+        }
+
+        return parseResult.Catalog;
+    }
+
+    /// <summary>
+    /// Get a cached dictionary of catalogs.
+    /// </summary>
+    /// <returns>A read only dictionary.</returns>
+    public IReadOnlyDictionary<string, POCatalog> GetCatalogs() => _catalogs;
 }

@@ -1,7 +1,7 @@
 ﻿#region Copyright and License
 
 /*
- * Xecrets Ez - Copyright © 2022-2024, Svante Seleborg, All Rights Reserved.
+ * Xecrets Ez - Copyright © 2022-2025 Svante Seleborg, All Rights Reserved.
  *
  * This code file is part of Xecrets Ez - A cross platform desktop application
  * for encryption, decryption and other file operations based on Xecrets Cli.
@@ -34,17 +34,16 @@
 
 using Karambolo.PO;
 
-namespace Xecrets.Localization
+namespace Xecrets.Localization;
+
+/// <summary>
+/// Provides translations from embedded .po files.
+/// </summary>
+public interface ITranslationsProvider
 {
     /// <summary>
-    /// Provides translations from embedded .po files.
+    /// Gets the catalogs of translations.
     /// </summary>
-    public interface ITranslationsProvider
-    {
-        /// <summary>
-        /// Gets the catalogs of translations.
-        /// </summary>
-        /// <returns></returns>
-        IReadOnlyDictionary<string, POCatalog> GetCatalogs();
-    }
+    /// <returns></returns>
+    IReadOnlyDictionary<string, POCatalog> GetCatalogs();
 }
