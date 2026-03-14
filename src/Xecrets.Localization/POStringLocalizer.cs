@@ -108,7 +108,7 @@ public sealed class POStringLocalizer(ITranslationsProvider translationsProvider
 
         POKey key = new(name.Replace("\r\n", "\n"));
         string? translation = catalog.GetTranslation(key);
-        if (translation == null)
+        if (String.IsNullOrEmpty(translation))
         {
             catalogs.TryGetValue("en-US", out POCatalog? englishCatalog);
             translation = englishCatalog?.GetTranslation(key) ?? key.Id;
