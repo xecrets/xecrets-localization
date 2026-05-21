@@ -1,5 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup Condition="'$(BuildingWapPackage)' == 'true' and '$(RuntimeIdentifiers)' == ''">
+  <!-- We're using ExcludeRestorePackageImports as a canary, indicating publishing Xecrets.Ez.Wap in IDE using 'publish' action.
+       Normally RuntimeIdentifiers should only be set in the top level project, but here it needs to be set transitively, in order
+       for Restore to create the correct project.assets.json for the platform-architectures. BuildingWapPackage is used in CI for
+       same reason. -->
+  <PropertyGroup Condition="( '$(BuildingWapPackage)' == 'true' and '$(RuntimeIdentifiers)' == '') or '$(ExcludeRestorePackageImports)' == 'True' ">
     <RuntimeIdentifiers>win-x64;win-arm64;linux-x64;linux-arm64;osx-x64;osx-arm64</RuntimeIdentifiers>
   </PropertyGroup>
   <PropertyGroup>
