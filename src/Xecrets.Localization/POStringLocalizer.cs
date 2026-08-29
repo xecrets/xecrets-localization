@@ -45,10 +45,10 @@ namespace Xecrets.Localization;
 /// </summary>
 /// <param name="translationsProvider"></param>
 /// <param name="location"></param>
-/// <param name="culture"></param>
+/// <param name="culture">An optional fixed culture. When omitted, the current UI culture is read for each lookup.</param>
 public sealed class POStringLocalizer(ITranslationsProvider translationsProvider, string location, CultureInfo? culture = null) : IStringLocalizer
 {
-    private readonly CultureInfo _culture = culture ?? CultureInfo.CurrentUICulture;
+    private readonly CultureInfo? _culture = culture;
 
     /// <summary>
     /// Translates a string by name, falling back to the name if no translation is found.
@@ -120,7 +120,7 @@ public sealed class POStringLocalizer(ITranslationsProvider translationsProvider
 
     private POCatalog? GetCatalog(IReadOnlyDictionary<string, POCatalog> catalogs)
     {
-        CultureInfo culture = _culture;
+        CultureInfo culture = _culture ?? CultureInfo.CurrentUICulture;
         while (true)
         {
             if (catalogs.TryGetValue(culture.Name, out POCatalog? catalog))
@@ -147,7 +147,7 @@ public sealed class POStringLocalizer(ITranslationsProvider translationsProvider
     public IEnumerable<LocalizedString> GetAllStrings(bool includeParentCultures)
     {
         IReadOnlyDictionary<string, POCatalog> catalogs = translationsProvider.GetCatalogs();
-        CultureInfo culture = _culture;
+        CultureInfo culture = _culture ?? CultureInfo.CurrentUICulture;
         do
         {
             if (catalogs.TryGetValue(culture.Name, out var catalog))
